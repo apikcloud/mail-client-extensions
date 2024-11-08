@@ -7,7 +7,7 @@ on:
         description: 'Additional domains separated by commas'
         type: string
         required: false
-        default: 'apik.cloud,*.apik.cloud,apix.bzh,*apix.bzh'
+        default: 'apik.cloud,*.apik.cloud,apix.bzh,*.apix.bzh'
       push:
         description: 'Push to CLASP Project'
         type: boolean
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./gmail    
+        working-directory: ./gmail
 
     steps:
       - name: Checkout
@@ -47,7 +47,7 @@ jobs:
         id: remove
         if: ${{ inputs.domains }}
         run: |
-          sed -i '/^ *if (!\/\^https:\/\/([^\\\/?]*\.)?odoo\\.com(\\/|$)\/.test(validatedUrl)) {$/,/^ *}$/d' src/views/login.ts          
+          sed -i '16,19d' src/views/login.ts
 
       - name: Add domains
         id: domains
@@ -88,8 +88,8 @@ jobs:
             // Write the updated appsscript.json file
             fs.writeFileSync(filePath, JSON.stringify(appsscriptData, null, 2));
             console.log(`Updated urlFetchWhitelist with new entries for domains: ${domains}`);
-          "    
-      
+          "
+
       - name: Build
         id: build
         run: npx rollup -c
@@ -109,7 +109,7 @@ jobs:
           accessToken: ${{ secrets.ACCESS_TOKEN }}
           idToken: ${{ secrets.ID_TOKEN }}
           refreshToken: ${{ secrets.REFRESH_TOKEN }}
-          clientId: ${{ secrets.CLIENT_ID }}     
+          clientId: ${{ secrets.CLIENT_ID }}
           clientSecret: ${{ secrets.CLIENT_SECRET }}
           scriptId: ${{ secrets.SCRIPT_ID }}
           rootDir: 'gmail'
